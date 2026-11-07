@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme-server-dark.png">
+  <img alt="Vault Server: policies, devices and incidents for your whole fleet. The server only ever sees masked values." src="assets/readme-server-light.png">
+</picture>
+
 # Vault DLP Server — releases
 
 Downloads and documentation for the **Vault DLP server**: the admin dashboard of the Vault data

@@ -26,6 +26,11 @@ administrator rights.
 **When the server is stopped or paused**, the desktop agents keep protecting their PCs with their
 last policies and queue their reports. They send them when the server is back.
 
+`stop` (and `restart`, `pause`, upgrades) first asks the server to shut down by itself, so it
+withdraws its network announcement at once; whatever doesn't stop within 20 seconds is
+force-stopped. If the server is killed some other way, Windows drops the announcement within
+about 30 seconds.
+
 ## Where things are
 
 In the install folder:
@@ -76,6 +81,12 @@ fails.
 
 The dashboard is down for a minute or two; agents queue their reports meanwhile. Agents keep
 trusting the server, since its certificate authority doesn't change.
+
+Setup stops the old version cleanly before replacing it: the server is asked to shut down, so it
+withdraws its network announcement and finishes what it's doing. Anything still running from the
+install folder after that, including a backup in progress or a stuck helper, is force-stopped, and
+locked files are retried, so the old version is always fully replaced. Versions before 0.4.3 had
+no clean stop and are force-stopped.
 
 To upgrade without questions: `& ".\Setup Vault.cmd" -Quiet`. It uses the saved settings.
 

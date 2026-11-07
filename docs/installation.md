@@ -19,8 +19,8 @@ download `Vault-Server-v<version>-win-x64.zip` and `Vault-Server-v<version>-win-
 In PowerShell, in the download folder:
 
 ```powershell
-(Get-FileHash .\Vault-Server-v0.4.1-win-x64.zip -Algorithm SHA256).Hash.ToLower()
-Get-Content .\Vault-Server-v0.4.1-win-x64.zip.sha256
+(Get-FileHash .\Vault-Server-v0.4.3-win-x64.zip -Algorithm SHA256).Hash.ToLower()
+Get-Content .\Vault-Server-v0.4.3-win-x64.zip.sha256
 ```
 
 Both lines must show the same value. If they don't, download again.
@@ -35,22 +35,48 @@ _Unblock_ > _OK_ and extract it again.
 
 ## 3. Run setup
 
-Double-click **`Setup Vault.cmd`**. Press Enter to keep the suggestion shown in `[brackets]`.
+Double-click **`Setup Vault.cmd`**. It shows the **recommended settings for this PC** and asks
+"Install with these settings?".
 
-| Question                               | Default                                        | Notes                                                                                                                                    |
-| -------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Install folder                         | `C:\Vault`                                     | Where Vault runs from. The extracted folder isn't needed afterwards                                                                      |
-| How should Vault run?                  | Windows service                                | **Service:** starts with the PC, even when no one is signed in. **Manual:** you start and stop it with Vault Control, under your account |
-| Addresses                              | `localhost, 127.0.0.1`, this PC's name and IPs | Names and IPs that people and agents use. The **first** one is the dashboard link. Include the name or IP agents on other PCs will use   |
-| HTTPS port                             | 443 (or 8443, 9443 if taken)                   | The dashboard and agent port                                                                                                             |
-| Internal app port                      | 3000                                           | Used only on this PC                                                                                                                     |
-| Database                               | Built-in PostgreSQL                            | Or an existing PostgreSQL server: give its connection URL                                                                                |
-| First administrator                    | `admin@vault.local`                            | New installs only. Leave the password empty to generate one                                                                              |
-| Nightly backups                        | On, 02:00, kept 14 days                        | Optionally copied to another disk or a network share                                                                                     |
-| Email alerts (SMTP)                    | Off                                            | Your mail server, port, user and sender                                                                                                  |
-| Windows Firewall                       | Yes                                            | Needed for agents on other PCs                                                                                                           |
-| Trust the HTTPS certificate on this PC | Yes                                            | No browser warnings on this PC                                                                                                           |
-| Desktop shortcut                       | Yes                                            | A _Vault Control_ shortcut                                                                                                               |
+- **Yes (Enter):** setup installs with them. Nothing else is asked apart from the Windows prompt
+  for administrator rights. The recommended settings are chosen so nothing clashes with what's on
+  this PC:
+  - **Ports:** HTTPS 443, app 3000 and database 5432, or the next free ones (8443, 9443…; 3001…;
+    5433…) if a program uses them, Windows reserves them (Hyper-V, WSL) or another Vault install
+    has them.
+  - **Folder:** `C:\Vault`, or `C:\Vault2`… if that folder already holds other files.
+  - **Name:** `Vault`, or `Vault 2`… if another install already uses it. The Windows tasks and
+    services are named after it.
+  - **Addresses:** `localhost`, this PC's name, `<name>.local` and its network addresses, so
+    agents on other PCs can connect.
+  - Runs as a Windows service, built-in database, nightly backups at 02:00 kept 14 days,
+    firewall open on private and domain networks, certificate trusted on this PC, network
+    announcement on, a generated admin password.
+- **No:** answer each question yourself (below). Press Enter to keep the suggestion in
+  `[brackets]`. Suggested ports are always free ones, and a port or folder that's taken is
+  refused with a free alternative.
+
+Updating an existing install shows its current settings and asks "Update and keep these
+settings?" instead. If another program has taken one of its ports since, setup says which and
+goes to the questions so you can pick another.
+
+### The questions (custom setup)
+
+| Question                                   | Default                                        | Notes                                                                                                                                    |
+| ------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Install folder                             | `C:\Vault`                                     | Where Vault runs from. The extracted folder isn't needed afterwards                                                                      |
+| How should Vault run?                      | Windows service                                | **Service:** starts with the PC, even when no one is signed in. **Manual:** you start and stop it with Vault Control, under your account |
+| Addresses                                  | `localhost, 127.0.0.1`, this PC's name and IPs | Names and IPs that people and agents use. The **first** one is the dashboard link. Include the name or IP agents on other PCs will use   |
+| HTTPS port                                 | 443 (or 8443, 9443 if taken)                   | The dashboard and agent port                                                                                                             |
+| Internal app port                          | 3000                                           | Used only on this PC                                                                                                                     |
+| Database                                   | Built-in PostgreSQL                            | Or an existing PostgreSQL server: give its connection URL                                                                                |
+| First administrator                        | `admin@vault.local`                            | New installs only. Leave the password empty to generate one                                                                              |
+| Nightly backups                            | On, 02:00, kept 14 days                        | Optionally copied to another disk or a network share                                                                                     |
+| Email alerts (SMTP)                        | Off                                            | Your mail server, port, user and sender                                                                                                  |
+| Windows Firewall                           | Yes                                            | Needed for agents on other PCs                                                                                                           |
+| Let agents find this server on the network | Yes                                            | Announces the server on the local network (see [Network announcement](#network-announcement))                                            |
+| Trust the HTTPS certificate on this PC     | Yes                                            | No browser warnings on this PC                                                                                                           |
+| Desktop shortcut                           | Yes                                            | A _Vault Control_ shortcut                                                                                                               |
 
 Setup shows a summary and asks to go ahead. It then asks for administrator rights (approve the
 Windows prompt) and continues in a new window. It:
@@ -122,6 +148,7 @@ Leave out anything you don't want to change; missing values use the defaults.
     "allowSelfSigned": false
   },
   "firewall": true,
+  "discovery": true,
   "trustCertificate": true,
   "desktopShortcut": true,
   "openBrowser": true
@@ -143,12 +170,16 @@ Leave out anything you don't want to change; missing values use the defaults.
 | `backups.copyTo`                      | Also copy each backup to this folder or share, e.g. `\\fileserver\vault-backups`               |
 | `smtp.*`                              | Mail server for alerts. Empty `host` turns email off. `secure` is for port 465                 |
 | `firewall`                            | Allow other PCs through Windows Firewall to `httpsPort`                                        |
+| `discovery`                           | Announce the server on the local network for agents (default on)                               |
 | `trustCertificate`                    | Trust Vault's certificate on this PC                                                           |
 | `desktopShortcut`                     | Put a _Vault Control_ shortcut on the desktop                                                  |
 | `openBrowser`                         | Open the dashboard when setup finishes                                                         |
 
 Setup saves the settings used in `<install folder>\vault.config.json` (no passwords), so an
 upgrade or `Vault Control.cmd config` starts from them.
+
+With `-Quiet`, a new install also gets free ports, folder, name and this PC's addresses for
+anything the settings file leaves out.
 
 ## Ports and network
 
@@ -160,6 +191,24 @@ upgrade or `Vault Control.cmd config` starts from them.
 
 The server uses no other ports and makes no outbound connections, except to your mail server and
 webhooks if you configure them.
+
+## Network announcement
+
+With `discovery` on (the default), the server announces itself on the local network as
+`_vault-dlp._tcp.local` (mDNS / DNS-SD) through Windows' own responder: no extra port or firewall
+rule. The announcement carries the server's name, version, HTTPS port and its certificate
+authority's SHA-256 fingerprint, and points at `<computer name>.local`, which setup adds to the
+server's certificate.
+
+Agents never connect to an announced server by themselves: anyone on a network can announce one,
+so an agent will offer it ("Found Vault server … Connect?") with the fingerprint to compare. The
+current agent doesn't use the announcement yet. Agent packages from the dashboard already carry
+the address, so nothing needs typing today either.
+
+Setup also records where the server is installed in `HKLM\SOFTWARE\Vault DLP\Server`
+(`InstallDir`, `HttpsPort`, `Version`, `Name`), so an agent on the same PC can find it.
+
+Turn the announcement off with `Vault Control.cmd config` (or `"discovery": false`).
 
 ## Certificates
 

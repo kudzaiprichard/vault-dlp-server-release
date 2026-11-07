@@ -6,12 +6,13 @@ version and the last backup. `Vault Control.cmd logs` shows the latest server lo
 
 ## Setup
 
-| Problem                                  | Fix                                                                                                                                                                  |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| "A port is in use"                       | Another program uses it (often 443). Accept the suggested port, or stop that program. The dashboard address then includes the port, e.g. `https://vault-server:8443` |
-| "Windows protected your PC"              | The files came from the internet. _More info_ > _Run anyway_, or unblock the zip (_Properties_ > _Unblock_) and extract it again                                     |
-| Setup is stuck at the administrator step | Approve the Windows prompt. Setup continues in a new window                                                                                                          |
-| The admin password is refused            | At least 12 characters, three of: lower case, upper case, digits, symbols, and not containing the email name                                                         |
+| Problem                                     | Fix                                                                                                                                                                                                               |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "A port is in use" or "reserved by Windows" | Another program uses it (often 443), or Windows keeps it for Hyper-V or WSL. Accept the suggested free port, or stop that program. The dashboard address then includes the port, e.g. `https://vault-server:8443` |
+| The update says a port "is in use"          | Another program took one of Vault's ports since it was installed. Pick the suggested free port in the questions that follow, or stop that program and run setup again                                             |
+| "Windows protected your PC"                 | The files came from the internet. _More info_ > _Run anyway_, or unblock the zip (_Properties_ > _Unblock_) and extract it again                                                                                  |
+| Setup is stuck at the administrator step    | Approve the Windows prompt. Setup continues in a new window                                                                                                                                                       |
+| The admin password is refused               | At least 12 characters, three of: lower case, upper case, digits, symbols, and not containing the email name                                                                                                      |
 
 ## Dashboard
 

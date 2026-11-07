@@ -14,6 +14,27 @@ How to run data loss prevention day to day from the dashboard.
 Five wrong passwords lock an account for 15 minutes. An admin can unlock it under _Users_. Every
 sign-in and change is in the _Audit log_.
 
+## Dashboard accounts
+
+- **The default admin.** Every new install has `admin@vault.local` with the password `@Vault12`,
+  so there's always a way in after setup. Because every install shares it, change its password
+  (account menu > _Change password_) or add your own admin and deactivate it. While any active
+  account still uses the default password, every admin sees a warning at the top of the
+  dashboard and the account is tagged _Default password_ under _Users_. It can be renamed, edited
+  and deactivated like any other account, whether or not it has ever signed in.
+- **Your password.** Change it any time from the account menu while you're signed in. New
+  passwords need at least 12 characters and three of: lower case, upper case, digits, symbols.
+- **Adding people.** _Users > Add user_. Admins, analysts and viewers get a one-time password to
+  pass on; they choose their own at first sign-in. Employees have no dashboard access.
+- **Editing and deactivating.** _Edit_ changes the name, email, role, department and Windows
+  username, and _Active_ turns sign-in off (the user is signed out at once). You can't change
+  your own role or deactivate yourself, and there's always at least one active admin.
+- **Forgotten passwords.** An admin uses _Reset password_ to give the person a new one-time
+  password. Add a second admin early, so someone always can.
+- **Deleting.** Only accounts that have never signed in can be deleted (a typo, or someone who
+  never started). Anyone who has signed in keeps their history: deactivate them instead.
+  Incidents and devices that mention a deleted person keep their details.
+
 ## How detection is organised
 
 - A **data type** is a kind of sensitive data, e.g. _Payment card number_ (`card_number`). Its

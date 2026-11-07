@@ -19,8 +19,8 @@ download `Vault-Server-v<version>-win-x64.zip` and `Vault-Server-v<version>-win-
 In PowerShell, in the download folder:
 
 ```powershell
-(Get-FileHash .\Vault-Server-v0.4.3-win-x64.zip -Algorithm SHA256).Hash.ToLower()
-Get-Content .\Vault-Server-v0.4.3-win-x64.zip.sha256
+(Get-FileHash .\Vault-Server-v0.4.6-win-x64.zip -Algorithm SHA256).Hash.ToLower()
+Get-Content .\Vault-Server-v0.4.6-win-x64.zip.sha256
 ```
 
 Both lines must show the same value. If they don't, download again.
@@ -51,7 +51,7 @@ Double-click **`Setup Vault.cmd`**. It shows the **recommended settings for this
     agents on other PCs can connect.
   - Runs as a Windows service, built-in database, nightly backups at 02:00 kept 14 days,
     firewall open on private and domain networks, certificate trusted on this PC, network
-    announcement on, a generated admin password.
+    announcement on, and the default admin (`admin@vault.local` / `@Vault12`).
 - **No:** answer each question yourself (below). Press Enter to keep the suggestion in
   `[brackets]`. Suggested ports are always free ones, and a port or folder that's taken is
   refused with a free alternative.
@@ -70,7 +70,7 @@ goes to the questions so you can pick another.
 | HTTPS port                                 | 443 (or 8443, 9443 if taken)                   | The dashboard and agent port                                                                                                             |
 | Internal app port                          | 3000                                           | Used only on this PC                                                                                                                     |
 | Database                                   | Built-in PostgreSQL                            | Or an existing PostgreSQL server: give its connection URL                                                                                |
-| First administrator                        | `admin@vault.local`                            | New installs only. Leave the password empty to generate one                                                                              |
+| First administrator                        | `admin@vault.local`, password `@Vault12`       | New installs only. Leave the password empty for the default; a password you choose needs 12+ characters                                  |
 | Nightly backups                            | On, 02:00, kept 14 days                        | Optionally copied to another disk or a network share                                                                                     |
 | Email alerts (SMTP)                        | Off                                            | Your mail server, port, user and sender                                                                                                  |
 | Windows Firewall                           | Yes                                            | Needed for agents on other PCs                                                                                                           |
@@ -90,9 +90,11 @@ Windows prompt) and continues in a new window. It:
    administrator and the default data types and policies.
 6. Opens the dashboard.
 
-**Administrator password.** At least 12 characters, with three of: lower case, upper case,
-digits, symbols. It can't contain the email name. If setup generated one, it's shown **once**:
-write it down. You'll choose a new password at first sign-in.
+**Administrator.** Unless you chose other credentials, sign in as `admin@vault.local` with the
+default password `@Vault12`. Every Vault install starts with it, so change it straight away
+(account menu > _Change password_), or add your own admin under _Users_ and deactivate the default
+one. Until then every admin sees a warning at the top of the dashboard. Passwords you choose need
+at least 12 characters and three of: lower case, upper case, digits, symbols.
 
 ## 4. First sign-in
 
@@ -113,14 +115,14 @@ install):
 & ".\Setup Vault.cmd" -Config my-vault.json -Quiet -AdminPassword "Choose-A-Strong-Pass1"
 ```
 
-| Option                      | Meaning                                                                                 |
-| --------------------------- | --------------------------------------------------------------------------------------- |
-| `-Config <file>`            | The settings file (below)                                                               |
-| `-Quiet`                    | Ask nothing; use the file and the defaults                                              |
-| `-InstallDir <folder>`      | Install folder (overrides the file)                                                     |
-| `-AdminPassword <password>` | The first administrator's password (new installs). Generated and shown once if left out |
-| `-DatabaseUrl <url>`        | Use your own PostgreSQL: `postgresql://user:password@host:5432/vault?schema=public`     |
-| `-SmtpPassword <password>`  | The mail server password                                                                |
+| Option                      | Meaning                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------- |
+| `-Config <file>`            | The settings file (below)                                                             |
+| `-Quiet`                    | Ask nothing; use the file and the defaults                                            |
+| `-InstallDir <folder>`      | Install folder (overrides the file)                                                   |
+| `-AdminPassword <password>` | The first administrator's password (new installs). The default `@Vault12` if left out |
+| `-DatabaseUrl <url>`        | Use your own PostgreSQL: `postgresql://user:password@host:5432/vault?schema=public`   |
+| `-SmtpPassword <password>`  | The mail server password                                                              |
 
 Passwords never go in the settings file: pass them as options.
 
@@ -137,7 +139,7 @@ Leave out anything you don't want to change; missing values use the defaults.
   "httpsPort": 443,
   "appPort": 3000,
   "database": { "mode": "bundled", "port": 5432, "name": "vault", "url": "" },
-  "admin": { "email": "admin@example.com", "name": "Administrator" },
+  "admin": { "email": "admin@vault.local", "name": "Administrator" },
   "backups": { "enabled": true, "time": "02:00", "keepDays": 14, "copyTo": "" },
   "smtp": {
     "host": "",

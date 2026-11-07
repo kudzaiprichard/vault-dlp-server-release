@@ -46,16 +46,17 @@ nothing else installed and no internet connection.
 2. **Check the download** (PowerShell, in the download folder). The two values must match:
 
    ```powershell
-   (Get-FileHash .\Vault-Server-v0.4.3-win-x64.zip -Algorithm SHA256).Hash.ToLower()
-   Get-Content .\Vault-Server-v0.4.3-win-x64.zip.sha256
+   (Get-FileHash .\Vault-Server-v0.4.6-win-x64.zip -Algorithm SHA256).Hash.ToLower()
+   Get-Content .\Vault-Server-v0.4.6-win-x64.zip.sha256
    ```
 
 3. **Extract** the zip (right-click > _Extract All_). Don't run it from inside the zip.
 4. **Run `Setup Vault.cmd`.** It shows recommended settings for this PC, picked so nothing
    clashes with what's already installed (free ports, folder and names). Press Enter to install
    with them and approve the Windows prompt. Answer _No_ to choose every setting yourself.
-5. **Sign in.** Setup opens the dashboard and shows the first administrator's password once if
-   it generated one. You'll choose a new password at first sign-in.
+5. **Sign in** with the default administrator, **admin@vault.local** / **@Vault12**. Every
+   install starts with it, so change its password right away (account menu > _Change password_)
+   or add your own admin under _Users_ and deactivate it. The dashboard warns until you do.
 6. **Connect the agents:** _Devices > Download agent_ (see [Connecting agents](docs/connecting-agents.md)).
 
 The full walkthrough, including unattended installs, is in the

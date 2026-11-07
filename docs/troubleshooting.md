@@ -12,7 +12,7 @@ version and the last backup. `Vault Control.cmd logs` shows the latest server lo
 | The update says a port "is in use"          | Another program took one of Vault's ports since it was installed. Pick the suggested free port in the questions that follow, or stop that program and run setup again                                             |
 | "Windows protected your PC"                 | The files came from the internet. _More info_ > _Run anyway_, or unblock the zip (_Properties_ > _Unblock_) and extract it again                                                                                  |
 | Setup is stuck at the administrator step    | Approve the Windows prompt. Setup continues in a new window                                                                                                                                                       |
-| The admin password is refused               | At least 12 characters, three of: lower case, upper case, digits, symbols, and not containing the email name                                                                                                      |
+| The admin password is refused               | A password you choose needs at least 12 characters, three of: lower case, upper case, digits, symbols, and not the email name. Leave it empty for the default `@Vault12`                                          |
 
 ## Dashboard
 
@@ -24,7 +24,7 @@ version and the last backup. `Vault Control.cmd logs` shows the latest server lo
 | "Invalid server configuration" in the log     | A secret in `server\.env` is missing or too short. Re-run setup to repair it                                                                                                                   |
 | "Applying database migrations… failed"        | The database isn't running or can't be reached. `logs database`; for your own PostgreSQL, check its URL and password                                                                           |
 | "Too many failed sign-in attempts"            | Wait 15 minutes, or another admin unlocks the account under _Users_                                                                                                                            |
-| Forgot the admin password                     | Another admin resets it under _Users_. Create a second admin early                                                                                                                             |
+| Forgot your password                          | Another admin resets it under _Users_ > _Reset password_. Add a second admin early, so someone always can                                                                                      |
 
 ## Agents
 

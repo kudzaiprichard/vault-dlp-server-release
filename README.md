@@ -62,6 +62,26 @@ nothing else installed and no internet connection.
 The full walkthrough, including unattended installs, is in the
 [installation guide](docs/installation.md).
 
+## Setting up Vault in a new organisation
+
+The full walkthrough is in **[docs/rollout.md](docs/rollout.md)**. In short:
+
+1. **Pick one Windows machine as the server** that stays on, has a fixed IP or DNS name, and that
+   every employee PC can reach on port 443.
+2. **Install Vault Server on it:** download the latest release, check its SHA-256, run
+   `Setup Vault.cmd`. Make sure the address the PCs will use is in the setup's address list.
+3. **Sign in** at `https://<server>` as `admin@vault.local` / `@Vault12` and **change that
+   password straight away**. Then add your own admins under _Users_.
+4. **Upload the agent installer once** under _Devices > Download agent_: the `.exe` and its
+   SHA-256 from the [agent releases](https://github.com/kudzaiprichard/vault-dlp-agent-release/releases/latest).
+5. **Download the agent package once.** Choose a server address the employees' PCs can reach (the
+   server's name or IP), **not `localhost`**.
+6. **Install the package on each PC:** extract, run the setup, answer _Yes_ to the certificate
+   prompt. The [agent's setup guide](https://github.com/kudzaiprichard/vault-dlp-agent-release/blob/main/docs/new-environment.md)
+   covers this and silent installs.
+7. **Approve the PCs** under _Devices_ (assign a key, or add an assignment rule), then test one by
+   sending a made-up card number to ChatGPT: it's blocked and shows under _Incidents_.
+
 ## Everyday use
 
 Double-click **Vault Control** (in the install folder, or the desktop shortcut) for a menu, or run
